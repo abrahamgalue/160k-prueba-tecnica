@@ -4,12 +4,13 @@
 
 </div>
 
-### Esta es una prueba tecnica por un salario de [**160K $**](https://twitter.com/jseijasdev/status/1508366106888908801).
+### Esta es una prueba técnica con un salario de [**160K $**](https://twitter.com/jseijasdev/status/1508366106888908801).
 
-Esta resuelta con JavaScript y los tests estan hechos con [JavaScript Standard](https://standardjs.com/).
+Está resuelta con JavaScript, y los tests están hechos con [JavaScript Standard](https://standardjs.com/).
 
-👇 Aquí debajo esta el enunciado de la prueba tecnica:
+[Repositorio original](https://github.com/jesus-seijas-sp/hand-challenge) en GitHub.
 
+**Enunciado**
 
 # Introduction
 
