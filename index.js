@@ -10,86 +10,94 @@
  *👊 : Display the current character represented by the ASCII code defined by the current position.
  */
 
-const MIN_CELL = 0;
-const MAX_CELL = 255;
+const MIN_CELL = 0
+const MAX_CELL = 255
 
 const clamp = (value) => {
-  if (value > MAX_CELL) return MIN_CELL;
-  if (value < MIN_CELL) return MAX_CELL;
-  return value;
-};
-
-const getNextFistIndex = (index, instructions) => {
-  let fists = 1;
-  for (let i = index + 1; i < instructions.length; i++) {
-    if (instructions[i] === "🤜") fists++;
-    if (instructions[i] === "🤛") fists--;
-    if (fists === 0) return i;
-  }
-};
-
-const getPrevFistIndex = (index, instructions) => {
-  let fists = 1;
-  for (let i = index - 1; i >= 0; i--) {
-    if (instructions[i] === "🤛") fists++;
-    if (instructions[i] === "🤜") fists--;
-    if (fists === 0) return i;
-  }
-};
-
-function translate(string) {
-  const memory = [0];
-
-  let pointer = 0;
-  let index = 0;
-  let output = "";
-
-  const arrayOfInstructions = Array.from(string);
-
-  const actions = {
-    "👉": () => {
-      pointer++;
-      memory[pointer] ??= 0;
-    },
-    "👈": () => {
-      pointer--;
-      memory[pointer] ??= 0;
-    },
-    "👆": () => {
-      memory[pointer] = clamp(memory[pointer] + 1);
-    },
-    "👇": () => {
-      memory[pointer] = clamp(memory[pointer] - 1);
-    },
-    "🤜": () => {
-      if (memory[pointer] === 0) {
-        index = getNextFistIndex(index, arrayOfInstructions);
-      }
-    },
-    "🤛": () => {
-      if (memory[pointer] !== 0) {
-        index = getPrevFistIndex(index, arrayOfInstructions);
-      }
-    },
-    "👊": () => {
-      output += String.fromCharCode(memory[pointer]);
-    },
-  };
-
-  while (index < arrayOfInstructions.length) {
-    const action = arrayOfInstructions[index];
-    actions[action]();
-    console.log({ action, index, pointer, output });
-    index++;
-  }
-
-  return output;
+  if (value > MAX_CELL) return MIN_CELL
+  if (value < MIN_CELL) return MAX_CELL
+  return value
 }
 
-console.log(
-  translate(
-    "👉👆👆👆👆👆👆👆👆🤜👇👈👆👆👆👆👆👆👆👆👆👉🤛👈👊👉👉👆👉👇🤜👆🤛👆👆👉👆👆👉👆👆👆🤜👉🤜👇👉👆👆👆👈👈👆👆👆👉🤛👈👈🤛👉👇👇👇👇👇👊👉👇👉👆👆👆👊👊👆👆👆👊👉👇👊👈👈👆🤜👉🤜👆👉👆🤛👉👉🤛👈👇👇👇👇👇👇👇👇👇👇👇👇👇👇👊👉👉👊👆👆👆👊👇👇👇👇👇👇👊👇👇👇👇👇👇👇👇👊👉👆👊👉👆👊"
-  )
-);
+const getNextFistIndex = (index, instructions) => {
+  let fists = 1
+  for (let i = index + 1; i < instructions.length; i++) {
+    if (instructions[i] === '🤜') fists++
+    if (instructions[i] === '🤛') fists--
+    if (fists === 0) return i
+  }
+}
 
-module.exports = translate;
+const getPrevFistIndex = (index, instructions) => {
+  let fists = 1
+  for (let i = index - 1; i >= 0; i--) {
+    if (instructions[i] === '🤛') fists++
+    if (instructions[i] === '🤜') fists--
+    if (fists === 0) return i
+  }
+}
+
+const INVALID_ARG_ERROR = 'The function receives a string as an argument'
+const INVALID_ARG_PATTERN_ERROR = 'TThe string must be a set of hand emoji characters like: 👉👈👆👇🤜🤛👊'
+
+const pattern = /^[👉👈👆👇🤜🤛👊]+$/u
+
+function translate(string) {
+  if (arguments.length !== 1) throw new Error(INVALID_ARG_ERROR)
+
+  if (typeof string !== 'string') throw new Error(INVALID_ARG_ERROR)
+
+  if (!pattern.test(string)) throw new Error(INVALID_ARG_PATTERN_ERROR)
+
+  const memory = [0]
+
+  let pointer = 0
+  let index = 0
+  let output = ''
+
+  const arrayOfInstructions = Array.from(string)
+
+  const actions = {
+    '👉': () => {
+      pointer++
+      memory[pointer] ??= 0
+    },
+    '👈': () => {
+      pointer--
+      memory[pointer] ??= 0
+    },
+    '👆': () => {
+      memory[pointer] = clamp(memory[pointer] + 1)
+    },
+    '👇': () => {
+      memory[pointer] = clamp(memory[pointer] - 1)
+    },
+    '🤜': () => {
+      if (memory[pointer] === 0) {
+        index = getNextFistIndex(index, arrayOfInstructions)
+      }
+    },
+    '🤛': () => {
+      if (memory[pointer] !== 0) {
+        index = getPrevFistIndex(index, arrayOfInstructions)
+      }
+    },
+    '👊': () => {
+      output += String.fromCharCode(memory[pointer])
+    }
+  }
+
+  while (index < arrayOfInstructions.length) {
+    const action = arrayOfInstructions[index]
+    actions[action]()
+    index++
+  }
+
+  return output
+}
+
+translate(
+  '👉👆👆👆👆👆👆👆👆🤜👇👈👆👆👆👆👆👆👆👆👆👉🤛👈👊👉👉👆👉👇🤜👆🤛👆👆👉👆👆👉👆👆👆🤜👉🤜👇👉👆👆👆👈👈👆👆👆👉🤛👈👈🤛👉👇👇👇👇👇👊👉👇👉👆👆👆👊👊👆👆👆👊👉👇👊👈👈👆🤜👉🤜👆👉👆🤛👉👉🤛👈👇👇👇👇👇👇👇👇👇👇👇👇👇👇👊👉👉👊👆👆👆👊👇👇👇👇👇👇👊👇👇👇👇👇👇👇👇👊👉👆👊👉👆👊'
+)
+
+module.exports = { translate, INVALID_ARG_ERROR, INVALID_ARG_PATTERN_ERROR }
